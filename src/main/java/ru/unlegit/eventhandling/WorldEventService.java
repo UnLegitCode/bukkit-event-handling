@@ -28,11 +28,11 @@ public final class WorldEventService implements EventListener {
             @NonNull EventHandlerDescription<E> handlerDescription, @NonNull Function<E, World> worldDetector
     ) {
         parentContext.registerHandler(this, new EventHandlerDescription<>(
-                handlerDescription.eventType(),
-                handlerDescription.priority(),
-                handlerDescription.ignoreCancelled(),
-                event -> (worldDetector.apply(event) == world) && handlerDescription.filter().test(event),
-                handlerDescription.handler()
+                handlerDescription.getEventType(),
+                handlerDescription.getPriority(),
+                handlerDescription.isIgnoreCancelled(),
+                event -> (worldDetector.apply(event) == world) && handlerDescription.getFilter().test(event),
+                handlerDescription.getHandler()
         ));
     }
 

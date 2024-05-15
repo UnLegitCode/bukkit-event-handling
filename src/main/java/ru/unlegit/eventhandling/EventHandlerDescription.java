@@ -1,8 +1,6 @@
 package ru.unlegit.eventhandling;
 
-import lombok.AccessLevel;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -10,13 +8,16 @@ import org.bukkit.event.EventPriority;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public record EventHandlerDescription<E extends Event>(
-        Class<E> eventType,
-        EventPriority priority,
-        boolean ignoreCancelled,
-        EventFilter<E> filter,
-        EventHandler<E> handler
-) {
+@Getter
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public final class EventHandlerDescription<E extends Event> {
+
+    Class<E> eventType;
+    EventPriority priority;
+    boolean ignoreCancelled;
+    EventFilter<E> filter;
+    EventHandler<E> handler;
 
     @RequiredArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -54,7 +55,7 @@ public record EventHandlerDescription<E extends Event>(
         }
 
         public EventHandlerDescription<E> build() {
-            return new EventHandlerDescription<E>(
+            return new EventHandlerDescription<>(
                     eventType, priority, ignoreCancelled, filter,
                     Objects.requireNonNull(handler, "handler can't be null")
             );

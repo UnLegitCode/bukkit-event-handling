@@ -33,9 +33,9 @@ public final class EventService implements EventListener {
 
     <E extends Event> void registerHandler(Listener listener, EventHandlerDescription<E> handlerDescription) {
         plugin.getServer().getPluginManager().registerEvent(
-                handlerDescription.eventType(), listener, handlerDescription.priority(),
-                handlerDescription.handler().withFilter(handlerDescription.filter()),
-                plugin, handlerDescription.ignoreCancelled()
+                handlerDescription.getEventType(), listener, handlerDescription.getPriority(),
+                handlerDescription.getHandler().withFilter(handlerDescription.getFilter()),
+                plugin, handlerDescription.isIgnoreCancelled()
         );
     }
 
