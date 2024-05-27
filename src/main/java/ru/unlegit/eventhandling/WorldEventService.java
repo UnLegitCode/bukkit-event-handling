@@ -21,19 +21,28 @@ import java.util.function.Function;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class WorldEventService implements EventListener {
 
-    EventService parentContext;
+    EventService parentService;
     World world;
 
     public <E extends Event> void registerHandler(
-            @NonNull EventHandlerDescription<E> handlerDescription, @NonNull Function<E, World> worldDetector
+            @NonNull EventListener listener,
+            @NonNull EventHandlerDescription<E> handlerDescription,
+            @NonNull Function<E, World> worldDetector
     ) {
-        parentContext.registerHandler(this, new EventHandlerDescription<>(
+        parentService.registerHandler(listener, new EventHandlerDescription<>(
                 handlerDescription.getEventType(),
                 handlerDescription.getPriority(),
                 handlerDescription.isIgnoreCancelled(),
                 event -> (worldDetector.apply(event) == world) && handlerDescription.getFilter().test(event),
                 handlerDescription.getHandler()
         ));
+    }
+
+
+    public <E extends Event> void registerHandler(
+            @NonNull EventHandlerDescription<E> handlerDescription, @NonNull Function<E, World> worldDetector
+    ) {
+        registerHandler(this, handlerDescription, worldDetector);
     }
 
     public <E extends Event>EventHandlerDescription.Builder<E> newHandler(
