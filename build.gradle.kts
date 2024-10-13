@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "ru.unlegit"
-version = "1.2"
+version = "1.5"
 
 repositories {
     mavenCentral()
@@ -28,6 +28,14 @@ tasks {
 }
 
 publishing {
+    repositories {
+        maven("https://repo.starfarm.fun/private") {
+            credentials {
+                username = System.getenv("SF_REPO_USER");
+                password = System.getenv("SF_REPO_PASSWORD");
+            }
+        }
+    }
     publications {
         create<MavenPublication>("release") {
             from(components["java"])

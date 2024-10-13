@@ -10,6 +10,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.vehicle.VehicleEvent;
 import org.bukkit.event.weather.WeatherEvent;
@@ -181,5 +182,27 @@ public final class WorldEventService implements EventListener {
 
     public <E extends VehicleEvent & Cancellable> void cancelVehicleEvent(@NonNull Class<E> eventType) {
         cancelVehicleEventIf(eventType, EventFilter.none());
+    }
+
+    public <E extends InventoryEvent> void registerInventoryHandler(
+            @NonNull EventHandlerDescription<E> handlerDescription
+    ) {
+        registerHandler(handlerDescription, event -> event.getView().getPlayer().getWorld());
+    }
+
+    public <E extends InventoryEvent> EventHandlerDescription.Builder<E> newInventoryHandler(
+            @NonNull Class<E> eventType
+    ) {
+        return new EventHandlerDescription.Builder<>(this::registerInventoryHandler, eventType);
+    }
+
+    public <E extends InventoryEvent & Cancellable> void cancelInventoryEventIf(
+            @NonNull Class<E> eventType, @NonNull EventFilter<E> filter
+    ) {
+        cancelIf(eventType, event -> event.getView().getPlayer().getWorld(), filter);
+    }
+
+    public <E extends InventoryEvent & Cancellable> void cancelInventoryEvent(@NonNull Class<E> eventType) {
+        cancelInventoryEventIf(eventType, EventFilter.none());
     }
 }
